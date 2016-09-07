@@ -2,6 +2,7 @@ XML Builder
 =======
 
 [![Build Status](https://travis-ci.org/AirGateway/xml_builder_plus.svg?branch=master)](https://travis-ci.org/AirGateway/xml_builder_plus)
+[![Hex.pm](https://img.shields.io/hexpm/v/xml_builder_plus.svg?maxAge=2592000)](https://hex.pm/packages/xml_builder_plus)
 
 ## Overview
 
