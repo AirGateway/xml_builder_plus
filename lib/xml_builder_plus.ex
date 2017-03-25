@@ -44,9 +44,16 @@ defmodule XmlBuilderPlus do
   def element({name, content}),
     do: element({name, nil, content})
 
-  def element({name, attrs, content}) when is_list(content),
-    do: {name, attrs, Enum.map(content, &tree_node/1)}
+  def element({name, attrs, []}) when is_map(attrs) do
+    element({name, attrs, nil})
+  end
 
+  def element({name, attrs, []})  do
+    element({name, attrs, nil})
+  end
+  def element({name, attrs, content}) when is_list(content) do
+    {name, attrs, Enum.map(content, &tree_node/1)}
+  end
   def element({name, attrs, content}),
     do: {name, attrs, content}
 
@@ -69,6 +76,9 @@ defmodule XmlBuilderPlus do
 
   def generate(any, namespace) when is_list(namespace) do
     generate(any, 0, namespace, "")
+  end
+  def generate(any, namespace) when is_map(namespace) do
+    generate(any, 0, Map.to_list(namespace), "")
   end
 
   def generate(list, level, namespace, old_namespace) when is_list(list) and is_list(namespace) do
