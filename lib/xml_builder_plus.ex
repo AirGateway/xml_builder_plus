@@ -25,42 +25,21 @@ defmodule XmlBuilderPlus do
   def doc(name_or_tuple, namespace_list \\ []), do: [:_doc_type | tree_node(name_or_tuple) |> List.wrap] |> generate(namespace_list)
 
 
-  def element(name) when is_bitstring(name) or is_atom(name),
-    do: element({name})
-
-  def element(list) when is_list(list),
-    do: Enum.map(list, &element/1)
-
-  def element({name}),
-    do: element({name, nil, nil})
-
-  def element({name, attrs}) when is_map(attrs),
-    do: element({name, attrs, nil})
-
-  def element({name, content}),
-    do: element({name, nil, content})
-
-  def element({name, attrs, []}) when is_map(attrs) do
-    element({name, attrs, nil})
-  end
-
-  def element({name, attrs, []})  do
-    element({name, attrs, nil})
-  end
-  def element({name, attrs, content}) when is_list(content) do
-    {name, attrs, Enum.map(content, &tree_node/1)}
-  end
-  def element({name, attrs, content}),
-    do: {name, attrs, content}
-
-  def element(name, attrs) when is_map(attrs),
-    do: element({name, attrs, nil})
-
-  def element(name, content),
-    do: element({name, nil, content})
-
-  def element(name, attrs, content),
-    do: element({name, attrs, content})
+  def element(name) when is_bitstring(name) or is_atom(name), do: element({name})
+  def element(list) when is_list(list), do: Enum.map(list, &element/1)
+  def element({name}), do: element({name, nil, nil})
+  def element({name, attrs}) when is_map(attrs), do: element({name, attrs, nil})
+  def element({name, content}), do: element({name, nil, content})
+  def element({name, attrs, []}) when is_map(attrs), do: element({name, attrs, nil})
+  def element({name, attrs, []}), do: element({name, attrs, nil})
+  def element({name, attrs, content}) when is_list(content), do: {name, attrs, Enum.map(content, &tree_node/1)}
+  def element({name, attrs, content}), do: {name, attrs, content}
+  def element(name, attrs) when is_map(attrs), do: element({name, attrs, nil})
+  def element(name, content), do: element({name, nil, content})
+  def element(config, elements, ndc_method) when is_list(config), do: element(String.to_atom(ndc_method), Enum.at(config, 0), elements)
+  def element(config, elements, ndc_method) when is_nil(config), do: element(String.to_atom(ndc_method), elements)
+  # def element(config, elements, ndc_method), do: element(String.to_atom(ndc_method), config, elements)
+  def element(name, attrs, content), do: element({name, attrs, content})
 
   def generate(:_doc_type, 0) do
     ~s|<?xml version="1.0" encoding="UTF-8" ?>|
